@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 import SendMail from './sendMail'
-import Cors from 'cors'
+
 
 
 class Main extends Component {
@@ -12,7 +12,6 @@ class Main extends Component {
         time: "",
         email: "",
         travelingTime: "",
-        sendMail: false,
         timeToLeave: " "
 
     }
@@ -22,15 +21,21 @@ class Main extends Component {
 
         e.preventDefault();
 
-        const headers = {
+        const config = { 
+            headers : {
             'Content-Type': 'application/json',
             "Access-Control-Allow-Origin" : "*",
             "Access-Control-Allow-Headers" : "Origin, X-Requested-With, Content-Type, Accept",
-            'Access-Control-Allow-Methods': 'POST, OPTIONS'
-          };
+            'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          },
+          proxy: {
+            host: 'localhost',
+            port: 3000
+          }
+        }
         console.log(this.state);
         axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${this.state.source}&destinations=${this.state.destination}&key=AIzaSyAW8v9wOOvEviACg4YbowQEQn0SLplfOJM`, 
-          {headers: headers}, )
+          config, )
         .then((data) => {
             
             console.log(data);
@@ -43,7 +48,7 @@ class Main extends Component {
         let totalSec= userHours*60*60 + userMinutes*60 - this.state.travelingTime;
         this.setState({timeToLeave: totalSec});
 
-        SendMail(this.state)
+        SendMail(this.state) // function to schedule email at a particular Time
 
         })
         .catch((err) => console.log(err));
