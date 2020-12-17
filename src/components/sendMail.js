@@ -1,5 +1,4 @@
 import sendGrid from '@sendgrid/mail'
-import schedule from 'node-schedule'
 
 sendGrid.setApiKey('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')
 
